@@ -3,10 +3,9 @@
 **Course project for UCS503P**, Thapar Institute of Engineering and
 Technology.
 
-AgriAid is a role-based web platform that digitizes the operational side
-of farming — not agronomy or crop advice, but the coordination problems
-around it: sharing machinery, arranging local labour, tracking farm
-finances, and navigating government schemes and insurance claims.
+AgriAid helps farmers with the non-agronomic side of farming: finding
+and booking shared machinery, tracking farm income/expenses, and
+getting help navigating government schemes and insurance claims.
 
 ## Team
 
@@ -17,34 +16,34 @@ finances, and navigating government schemes and insurance claims.
 | Neha Bansal | 1024030306 |
 | Vaibhav Budhia | 1024030307 |
 
+## Start here
+[`docs/PLAN.md`](docs/PLAN.md) — the one planning document. Covers the
+problem, our process (6 phases over 12 weeks), how the codebase is
+organized, and who owns what.
+
+## What's working right now
+- **`code/frontend/landing.html`** — a finished landing page. Open it
+  directly in a browser, no setup needed.
+- **`code/backend`** — an Express server that boots and responds, but
+  every route is a stub returning `501 Not Implemented` — the shape is
+  there, the logic isn't yet.
+- **`code/frontend/src`** — page/component files exist for every screen
+  (login, dashboard, booking, ledger, schemes, claims...) but render
+  nothing yet. They mark where each phase's work will go.
+
+## Weekly progress
+Per-person logs in [`journals/`](journals/), one folder per member.
+
 ## Repository Structure
-
 ```
-UCS503P-AgriAid/
-├── project-proposal/     Formal project proposal (LaTeX + PDF)
-├── docs/
-│   └── phase-1/          Requirements & design artifacts (Phase 1)
-└── journals/              Weekly progress logs
+project-proposal/    Formal proposal (LaTeX + PDF)
+docs/
+  PLAN.md              The single planning doc
+journals/              Per-person weekly logs
+code/
+  backend/              Express API (routes/controllers/models scaffolded, stubbed)
+  frontend/
+    landing.html          Finished, working landing page
+    src/                    React page/component scaffolding (stubbed)
 ```
 
-## Project Status
-
-Currently in **Phase 1 — Requirements & Design** (Week 1–2 of a 12-week,
-6-phase Agile-Incremental plan). No application code has been written
-yet; see [`docs/phase-1/index.md`](docs/phase-1/index.md) for the full
-phase breakdown and [`journals/`](journals/) for weekly logs.
-
-## Process Model
-
-Agile-Incremental Hybrid: a Foundation increment (Auth + DB + CI/CD),
-followed by three module increments — Community Resource Network, Farm
-Operations & Financial Management, and Government Benefits & Claims
-Assistance — then a final integration phase.
-
-## Tech Stack (planned)
-
-- **Frontend:** React.js, Tailwind CSS
-- **Backend:** Node.js, Express.js
-- **Database & Storage:** PostgreSQL, Supabase Storage
-- **Maps/Location:** Leaflet, OpenStreetMap
-- **Testing & CI/CD:** Jest, Supertest, Postman, GitHub Actions, Vercel, Render
