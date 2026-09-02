@@ -45,9 +45,16 @@ names, routes, props) but don't yet do real work. Each phase fills in one
 slice of this structure with working logic.
 
 ## What's actually working right now
-`code/frontend/landing.html` — a real, finished landing page for the
-project (open it directly in a browser, no setup needed). Everything else
-in `code/` is scaffolding for what Phase 2 onward will fill in.
+- `code/frontend/landing.html` — finished landing page, open directly in a browser
+- **Auth end-to-end** — register, login, and a JWT-protected profile route,
+  backed by a real PostgreSQL database (13 tables, 5 migrations)
+- **Real frontend** — Vite + React, working Login/Register/Dashboard pages
+  that call the live backend and render real data
+- CI runs migrations + tests against a real Postgres service container
+
+Still stubbed (`501`, not yet built): resource booking, breakdown reports,
+labour matching, farm ledger, schemes, claims, admin. Those come in
+Phases 3–5.
 
 ## Tech stack
 Frontend: React + Tailwind (planned) · Backend: Node.js + Express ·

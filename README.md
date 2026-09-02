@@ -3,10 +3,6 @@
 **Course project for UCS503P**, Thapar Institute of Engineering and
 Technology.
 
-AgriAid helps farmers with the non-agronomic side of farming: finding
-and booking shared machinery, tracking farm income/expenses, and
-getting help navigating government schemes and insurance claims.
-
 ## Team
 
 | Name | Roll No. |
@@ -17,22 +13,87 @@ getting help navigating government schemes and insurance claims.
 | Vaibhav Budhia | 1024030307 |
 
 ## Start here
-[`docs/PLAN.md`](docs/PLAN.md) — the one planning document. Covers the
-problem, our process (6 phases over 12 weeks), how the codebase is
-organized, and who owns what.
+[`docs/PLAN.md`](docs/PLAN.md) — the one planning doc: problem, process,
+folder structure, ownership.
 
 ## What's working right now
-- **`code/frontend/landing.html`** — a finished landing page. Open it
-  directly in a browser, no setup needed.
-- **`code/backend`** — an Express server that boots and responds, but
-  every route is a stub returning `501 Not Implemented` — the shape is
-  there, the logic isn't yet.
-- **`code/frontend/src`** — page/component files exist for every screen
-  (login, dashboard, booking, ledger, schemes, claims...) but render
-  nothing yet. They mark where each phase's work will go.
+- **`code/frontend/landing.html`** — finished landing page, open directly
+  in a browser.
+- **Real auth, end-to-end** — register → login → JWT-protected profile
+  route, backed by a real PostgreSQL database.
+- **Real frontend** — Vite + React. Login, Register, and Dashboard pages
+  actually call the backend and render real data.
 
-## Weekly progress
-Per-person logs in [`journals/`](journals/), one folder per member.
+Everything else (booking, ledger, schemes, claims, admin) is still
+scaffolded but not implemented — that's Phases 3–5.
+
+---
+
+## Running it
+
+### 1. Get a Postgres database
+
+You need a running Postgres instance and its connection string. Two options:
+
+**Option A — Supabase (recommended, no local install)**
+This is what we're using in production anyway, so it's worth setting up
+now instead of a throwaway local DB:
+1. Go to [supabase.com](https://supabase.com) → New Project (free tier)
+2. Once it's created: **Project Settings → Database → Connection string**
+   → copy the "URI" one (looks like
+   `postgresql://postgres:[PASSWORD]@db.xxxx.supabase.co:5432/postgres`)
+3. That's your `DATABASE_URL`.
+
+**Option B — Local Postgres on your machine**
+- **Mac:** `brew install postgresql@16 && brew services start postgresql@16`,
+  then `createdb agriaid`
+- **Windows/Linux:** install from [postgresql.org/download](https://www.postgresql.org/download/),
+  then `createdb agriaid`
+- Your `DATABASE_URL` will be:
+  `postgresql://postgres:<your-password>@localhost:5432/agriaid`
+
+Whoever is **not** running Postgres locally just needs the Supabase
+connection string shared with them (e.g. via `.env`, kept out of git) —
+same database, everyone's backend points at it. No one else needs
+Postgres installed at all.
+
+### 2. Backend
+
+```bash
+cd code/backend
+npm install
+cp .env.example .env
+# edit .env and paste your real DATABASE_URL, set any JWT_SECRET
+
+npm run migrate     # creates all 13 tables
+npm start            # runs on http://localhost:4000
+```
+
+Sanity check:
+```bash
+curl http://localhost:4000/api/health
+# {"status":"ok"}
+```
+
+### 3. Frontend
+
+```bash
+cd code/frontend
+npm install
+npm run dev           # runs on http://localhost:5173
+```
+
+Open `http://localhost:5173` — it redirects to `/login`. Register a new
+account, and you'll land on a dashboard showing your real name/role/region,
+pulled live from the database.
+
+### 4. Run backend tests
+```bash
+cd code/backend
+npm test
+```
+
+---
 
 ## Repository Structure
 ```
@@ -41,9 +102,25 @@ docs/
   PLAN.md              The single planning doc
 journals/              Per-person weekly logs
 code/
-  backend/              Express API (routes/controllers/models scaffolded, stubbed)
+  backend/
+    server.js             Entry point
+    migrations/            5 SQL files, run in order by migrate.js
+    migrate.js              Migration runner
+    src/routes/              9 route files (auth, resources, bookings, ...)
+    src/controllers/          auth + profile implemented; rest stubbed (501)
+    src/models/                user.model.js implemented; rest are shape comments
+    src/middleware/             auth.middleware.js — real JWT verification
+    test/                        node --test smoke tests
   frontend/
-    landing.html          Finished, working landing page
-    src/                    React page/component scaffolding (stubbed)
+    landing.html               Finished, working landing page
+    src/
+      pages/Login.jsx            Working
+      pages/Register.jsx         Working
+      pages/Dashboard.jsx        Working
+      pages/*.jsx                 Everything else — stubs, not yet built
+.github/workflows/ci.yml    Runs migrations + tests against a real Postgres service
 ```
 
+## Tech Stack
+React + Vite (frontend) · Node.js + Express (backend) · PostgreSQL via
+Supabase (database) · Vercel/Render (planned deployment)

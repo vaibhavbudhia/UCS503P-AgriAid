@@ -1,5 +1,11 @@
-// PostgreSQL connection setup (Supabase). Not implemented yet — Phase 2.
-// TODO: create a pg Pool using DATABASE_URL from .env, export it so
-// controllers can run queries: `const { rows } = await db.query(sql, params)`
+// Real PostgreSQL connection pool, backed by DATABASE_URL.
+// Owner: Vaibhav Budhia
 
-module.exports = null;
+require('dotenv').config();
+const { Pool } = require('pg');
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
+
+module.exports = pool;
