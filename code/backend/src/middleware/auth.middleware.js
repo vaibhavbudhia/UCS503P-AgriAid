@@ -1,5 +1,5 @@
 // Verifies the JWT in the Authorization header, attaches decoded payload to req.user.
-// Owner: Vaibhav Budhia
+// Owner: Neha bansal 
 
 const jwt = require('jsonwebtoken');
 

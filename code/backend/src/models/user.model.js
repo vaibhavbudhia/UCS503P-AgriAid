@@ -1,5 +1,5 @@
 // Real query functions backing the users table.
-// Owner: Neha Bansal / Lovish Bansal
+// Owner: Neha Bansal 
 
 const db = require('../config/db');
 
@@ -22,5 +22,18 @@ async function create({ name, phone, email, passwordHash, role, region }) {
   );
   return rows[0];
 }
+async function upsertFarmerProfile(userId, { landSize, primaryCrop, region }) {
+  const { rows } = await db.query(
+    `INSERT INTO farmer_profiles (user_id, land_size, primary_crop, region)
+     VALUES ($1, $2, $3, $4)
+     ON CONFLICT (user_id) DO UPDATE
+     SET land_size = EXCLUDED.land_size,
+         primary_crop = EXCLUDED.primary_crop,
+         region = EXCLUDED.region
+     RETURNING user_id, land_size, primary_crop, region`,
+    [userId, landSize || null, primaryCrop || null, region || null]
+  );
+  return rows[0];
+}
 
-module.exports = { findByPhone, findById, create };
+module.exports = { findByPhone, findById, create, upsertFarmerProfile };
