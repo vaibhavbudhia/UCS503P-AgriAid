@@ -1,5 +1,5 @@
 // Real profile lookup, protected by requireAuth.
-// Owner: Lovish Bansal
+// Owner: Neha Bansal
 
 const userModel = require('../models/user.model');
 
@@ -10,5 +10,14 @@ async function getProfile(req, res) {
   }
   res.json(user);
 }
-
-module.exports = { getProfile };
+async function updateFarmerProfile(req, res) {
+  try {
+    const { landSize, primaryCrop, region } = req.body;
+    const profile = await userModel.upsertFarmerProfile(req.user.id, { landSize, primaryCrop, region });
+    res.json(profile);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'failed to update farmer profile' } });
+  }
+}
+module.exports = { getProfile, updateFarmerProfile };

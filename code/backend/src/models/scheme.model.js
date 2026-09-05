@@ -32,5 +32,13 @@ async function getEligibleForFarmer(farmerId) {
   const [schemes, profile] = await Promise.all([listAll(), getFarmerProfile(farmerId)]);
   return schemes.filter((s) => matchesEligibility(s.eligibility_rules, profile));
 }
-
-module.exports = { listAll, getEligibleForFarmer, matchesEligibility, getFarmerProfile };
+async function create({ name, eligibilityRules, requiredDocuments, createdBy }) {
+  const result = await pool.query(
+    `INSERT INTO schemes (name, eligibility_rules, required_documents, created_by)
+     VALUES ($1, $2, $3, $4)
+     RETURNING id, name, eligibility_rules, required_documents, created_by`,
+    [name, JSON.stringify(eligibilityRules), requiredDocuments || null, createdBy]
+  );
+  return result.rows[0];
+}
+module.exports = { listAll, getEligibleForFarmer, matchesEligibility, getFarmerProfile, create };
