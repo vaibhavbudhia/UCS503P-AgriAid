@@ -34,6 +34,11 @@ export default function Dashboard() {
       <h1>Welcome, {profile.name}</h1>
       <p>Role: {profile.role}</p>
       <p>Region: {profile.region || 'Not set'}</p>
+      <nav style={{ margin: '16px 0' }}>
+        <a href="/resources" style={{ marginRight: 12 }}>Find a Resource</a>
+        <a href="/bookings" style={{ marginRight: 12 }}>My Bookings</a>
+        <a href="/breakdowns">Report Breakdown</a>
+      </nav>
       <button onClick={logout}>Log out</button>
     </div>
   );

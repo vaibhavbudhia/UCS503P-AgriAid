@@ -1,4 +1,4 @@
-// Owner: Lovish Bansal
+// Owner: Neha Bansal
 
 const resourceModel = require('../models/resource.model');
 
