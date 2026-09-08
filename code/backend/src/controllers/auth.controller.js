@@ -1,5 +1,5 @@
 // Real registration/login logic: bcrypt hashing + JWT issuing.
-// Owner: Lovish Bansal
+// Owner: Neha Bansal
 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');

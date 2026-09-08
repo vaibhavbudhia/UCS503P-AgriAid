@@ -1,4 +1,4 @@
-// Owner: Lovish Bansal
+// Owner: Neha Bansal
 
 const bookingModel = require('../models/booking.model');
 const resourceModel = require('../models/resource.model');
