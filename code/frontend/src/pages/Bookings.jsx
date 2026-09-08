@@ -1,18 +1,21 @@
-// Real bookings view — farmer sees their requests, provider accepts/rejects.
-// Owner: Lovish Bansal
-
+// Bookings view: farmers see their requests, providers accept/reject
+// requests made on their resources.
 import { useEffect, useState } from 'react';
+import Layout from '../components/Layout';
 import apiRequest from '../api/client';
 
 export default function Bookings() {
   const [bookings, setBookings] = useState([]);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
   const token = localStorage.getItem('agriaid_token');
 
   function load() {
+    setLoading(true);
     apiRequest('/bookings', { token })
-      .then((data) => setBookings(data.results))
-      .catch((err) => setError(err.message));
+      .then((data) => setBookings(data.results || []))
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
   }
 
   useEffect(() => { load(); }, []);
@@ -27,24 +30,53 @@ export default function Bookings() {
   }
 
   return (
-    <div style={{ maxWidth: 560, margin: '40px auto', fontFamily: 'sans-serif' }}>
-      <h1>My Bookings</h1>
-      {error && <p style={{ color: 'crimson' }}>{error}</p>}
-      {bookings.length === 0 && <p>No bookings yet.</p>}
-      {bookings.map((b) => (
-        <div key={b.id} style={{ border: '1px solid #ccc', borderRadius: 6, padding: 12, marginBottom: 10 }}>
-          <b style={{ textTransform: 'capitalize' }}>{b.resource_type}</b>
-          {b.farmer_name && <> — requested by {b.farmer_name}</>}<br />
-          {new Date(b.start_time).toLocaleString()} → {new Date(b.end_time).toLocaleString()}<br />
-          Status: <b>{b.status}</b>
-          {b.status === 'pending' && b.farmer_name && (
-            <div style={{ marginTop: 8 }}>
-              <button onClick={() => respond(b.id, 'accepted')}>Accept</button>
-              <button onClick={() => respond(b.id, 'rejected')} style={{ marginLeft: 8 }}>Reject</button>
+    <Layout wide>
+      <h1>My bookings</h1>
+      <p>Requests you've made, or requests other farmers have made on your listings.</p>
+
+      {error && <p className="alert alert-error">{error}</p>}
+
+      {loading ? (
+        <p className="helper-text">Loading bookings…</p>
+      ) : bookings.length === 0 ? (
+        <div className="empty-state">No bookings yet. Find a resource to request one.</div>
+      ) : (
+        <div className="row-list">
+          {bookings.map((b) => (
+            <div key={b.id} className="row-item">
+              <div className="row-item-badge">{(b.resource_type || '?').slice(0, 2).toUpperCase()}</div>
+              <div className="row-item-body">
+                <div className="row-item-title">
+                  {b.resource_type}{b.is_group_booking ? ' · group booking' : ''}
+                </div>
+                <div className="row-item-meta">
+                  {b.farmer_name && <>Requested by {b.farmer_name} · </>}
+                  {b.provider_name && <>Provider: {b.provider_name} · </>}
+                  {new Date(b.start_time).toLocaleString()} → {new Date(b.end_time).toLocaleString()}
+                  {b.usage_charge && <> · ₹{b.usage_charge}/day</>}
+                </div>
+                {b.group_members?.length > 0 && (
+                  <div className="row-item-desc">Splitting with: {b.group_members.map((m) => m.name).join(', ')}</div>
+                )}
+                {b.status === 'pending' && b.farmer_name && (
+                  <div style={{ marginTop: 10, display: 'flex', gap: 8 }}>
+                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => respond(b.id, 'accepted')}>Accept</button>
+                    <button type="button" className="btn btn-danger btn-sm" onClick={() => respond(b.id, 'rejected')}>Reject</button>
+                  </div>
+                )}
+                {b.status === 'accepted' && b.farmer_name && (
+                  <div style={{ marginTop: 10 }}>
+                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => respond(b.id, 'completed')}>Mark completed</button>
+                  </div>
+                )}
+              </div>
+              <div className="row-item-action">
+                <span className={`status-tag status-${b.status}`}>{b.status}</span>
+              </div>
             </div>
-          )}
+          ))}
         </div>
-      ))}
-    </div>
+      )}
+    </Layout>
   );
 }
