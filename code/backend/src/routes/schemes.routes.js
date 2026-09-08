@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { requireAuth } = require('../middleware/auth.middleware');
-const { reportBreakdown } = require('../controllers/breakdown.controller');
+const { getEligibleSchemes } = require('../controllers/schemes.controller');
 
-router.post('/', requireAuth, reportBreakdown);
+router.get('/eligible', requireAuth, getEligibleSchemes);
 
 module.exports = router;
