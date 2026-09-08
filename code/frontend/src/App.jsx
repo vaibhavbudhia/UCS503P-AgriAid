@@ -1,5 +1,5 @@
-// Route wiring. Not implemented — components below are stubs until each
-// phase fills them in.
+// Route wiring. Login/Register/Dashboard are real (Phase 2 / Foundation);
+// the rest are stubs until their phase lands.
 
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';

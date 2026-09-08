@@ -28,38 +28,47 @@ unintegrated until the end.
 ```
 code/
 ├── backend/           Express API
+│   ├── migrations/      Numbered SQL files + migrate.js runner (real, Phase 2)
+│   ├── test/             node --test integration tests (real DB)
 │   └── src/
 │       ├── routes/      URL → controller mapping, one file per module
 │       ├── controllers/ Request handling logic, one file per module
-│       ├── models/       Data shape for each entity (DB access comes in Phase 2)
-│       └── middleware/   Auth/JWT checks
+│       ├── models/       DB access per entity (real for users, Phase 2)
+│       └── middleware/   Auth/JWT checks, async error wrapper
 └── frontend/
     ├── landing.html     Working showcase page (see below)
     └── src/
-        ├── pages/        One file per screen
+        ├── pages/        One file per screen (Login/Register/Dashboard real)
         ├── components/    Shared UI pieces
         └── api/            Wrapper for calling the backend
+.github/workflows/ci.yml   Spins up Postgres, runs migrations + backend tests
 ```
-Right now these files are **stubs** — they define the shape (function
-names, routes, props) but don't yet do real work. Each phase fills in one
-slice of this structure with working logic.
+Auth, the full DB schema, and base API/frontend wiring are real as of
+Phase 2 (Foundation). Everything else still defines the shape (function
+names, routes, props) without doing real work yet — later phases fill
+each slice in.
 
 ## What's actually working right now
-- `code/frontend/landing.html` — finished landing page, open directly in a browser
-- **Auth end-to-end** — register, login, and a JWT-protected profile route,
-  backed by a real PostgreSQL database (13 tables, 5 migrations)
-- **Real frontend** — Vite + React, working Login/Register/Dashboard pages
-  that call the live backend and render real data
-- CI runs migrations + tests against a real Postgres service container
-
-Still stubbed (`501`, not yet built): resource booking, breakdown reports,
-labour matching, farm ledger, schemes, claims, admin. Those come in
-Phases 3–5.
+- `code/frontend/landing.html` — a real, finished landing page for the
+project (open it directly in a browser, no setup needed).
+- **Auth + DB (Phase 2 / Foundation, complete):** real Postgres schema
+  (10 tables, `code/backend/migrations/`), real `POST /api/auth/register`,
+  `POST /api/auth/login`, and a JWT-protected `GET /api/auth/profile`, and
+  a working Vite + React `Login` → `Register` → `Dashboard` flow talking to
+  the live backend. Backend has 6 integration tests against a real DB;
+  frontend has 7 render/interaction tests (Vitest + Testing Library). CI
+  runs backend lint + migrate + test, and frontend test + build, on every
+  push. See `journals/` week 3 entries for what was verified and how.
+- Everything else in `code/` is still scaffolding for phases 3–6.
 
 ## Tech stack
 Frontend: React + Tailwind (planned) · Backend: Node.js + Express ·
 Database: PostgreSQL via Supabase · Hosting: Vercel (frontend) /
 Render (backend)
+
+## Running it locally
+[`docs/SETUP.md`](SETUP.md) — install Postgres, run migrations, boot
+the backend and frontend, run both test suites, and how CI is wired.
 
 ## Team & ownership
 | Member | Owns |

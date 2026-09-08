@@ -1,6 +1,6 @@
-// Entry point. This is how the app will run once the modules below are
-// filled in — currently every route responds with 501 Not Implemented.
-
+// Entry point. Auth + DB are real (Phase 2 / Foundation); every other
+// module still responds with 501 Not Implemented until its phase lands.
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 
@@ -32,5 +32,16 @@ app.use('/api/schemes', schemeRoutes);
 app.use('/api/claims', claimRoutes);
 app.use('/api/admin', adminRoutes);
 
+// Catches errors forwarded by catchAsync() so a failed query returns
+// JSON instead of crashing the process.
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({ error: 'internal server error' });
+});
+
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => console.log(`AgriAid backend (skeleton) on :${PORT}`));
+if (require.main === module) {
+  app.listen(PORT, () => console.log(`AgriAid backend on :${PORT}`));
+}
+
+module.exports = app;
