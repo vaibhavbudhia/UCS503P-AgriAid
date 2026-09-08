@@ -1,15 +1,8 @@
-// Owner: Lovish Bansal
-
-const schemeModel = require('../models/scheme.model');
+// Scheme eligibility matching. Not implemented — Phase 5.
 
 async function getEligibleSchemes(req, res) {
-  try {
-    const schemes = await schemeModel.getEligibleForFarmer(req.user.id);
-    res.json(schemes);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'failed to get eligible schemes' } });
-  }
+  // TODO: run req.user's profile against schemes.eligibility_rules (JSONB)
+  res.status(501).json({ error: 'not implemented' });
 }
 
 module.exports = { getEligibleSchemes };

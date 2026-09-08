@@ -1,11 +1,15 @@
-// Real PostgreSQL connection pool, backed by DATABASE_URL.
-// Owner: Vaibhav Budhia
-
+// PostgreSQL connection pool. Controllers/models import this and call
+// `db.query(sql, params)` -- never talk to `pg` directly elsewhere.
 require('dotenv').config();
 const { Pool } = require('pg');
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
+if (!process.env.DATABASE_URL) {
+  console.warn('DATABASE_URL is not set -- see .env.example');
+}
 
-module.exports = pool;
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+
+module.exports = {
+  query: (text, params) => pool.query(text, params),
+  pool,
+};

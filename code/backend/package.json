@@ -1,12 +1,14 @@
 {
   "name": "agriaid-backend",
   "version": "0.2.0",
-  "description": "AgriAid API - Foundation phase (auth + DB wired up)",
+  "description": "AgriAid API",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "migrate": "node migrate.js",
-    "test": "node --test test/*.test.js"
+    "dev": "node --watch server.js",
+    "migrate": "node migrations/migrate.js",
+    "lint": "eslint . --ext .js",
+    "test": "node --test"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -15,5 +17,9 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.12.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.1",
+    "supertest": "^7.2.2"
   }
 }

@@ -5,7 +5,6 @@ const express = require('express');
 const cors = require('cors');
 
 const authRoutes = require('./src/routes/auth.routes');
-const profileRoutes = require('./src/routes/profile.routes');
 const resourceRoutes = require('./src/routes/resources.routes');
 const bookingRoutes = require('./src/routes/bookings.routes');
 const breakdownRoutes = require('./src/routes/breakdown.routes');
@@ -22,7 +21,6 @@ app.use(express.json());
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
 app.use('/api/auth', authRoutes);
-app.use('/api/profile', profileRoutes);
 app.use('/api/resources', resourceRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/breakdowns', breakdownRoutes);
