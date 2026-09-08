@@ -8,6 +8,8 @@ import Dashboard from './pages/Dashboard';
 import ResourceSearch from './pages/ResourceSearch';
 import Bookings from './pages/Bookings';
 import BreakdownReport from './pages/BreakdownReport';
+import BreakdownQueue from './pages/BreakdownQueue';
+import Support from './pages/Support';
 import LabourRequests from './pages/LabourRequests';
 import Ledger from './pages/Ledger';
 import Schemes from './pages/Schemes';
@@ -25,6 +27,8 @@ export default function App() {
         <Route path="/resources" element={<ResourceSearch />} />
         <Route path="/bookings" element={<Bookings />} />
         <Route path="/breakdowns" element={<BreakdownReport />} />
+        <Route path="/repair-queue" element={<BreakdownQueue />} />
+        <Route path="/support" element={<Support />} />
         <Route path="/labour" element={<LabourRequests />} />
         <Route path="/ledger" element={<Ledger />} />
         <Route path="/schemes" element={<Schemes />} />

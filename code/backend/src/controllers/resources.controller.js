@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 // Resource listing/discovery logic. Not implemented — Phase 3.
+=======
+// Owner: Neha Bansal
+
+const resourceModel = require('../models/resource.model');
+>>>>>>> origin/frontend
 
 async function listResources(req, res) {
   // TODO: query resources table, filter by type/location/availability from req.query
